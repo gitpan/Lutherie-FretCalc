@@ -5,56 +5,111 @@
 package Lutherie::FretCalc;
 
 use strict;
-use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
+use vars qw($VERSION);
 
-require Exporter;
+$VERSION = '0.20';
 
-@ISA = qw(Exporter);
-@EXPORT_OK = qw(fretcalc fret);
-@EXPORT = ();
+sub new {
+    my $proto = shift;
+    my $class = ref($proto) || $proto;
+    my $self = {};
 
-$VERSION = '0.16';
+    if (defined $_[0]) {
+        $self->{scale} = $_[0];
+    } else {
+        $self->{scale} = 25;
+    }
+    $self->{num_frets}   = 24;
+    $self->{fret_num}    = 12;
+    $self->{in_units}    = 'in';
+    $self->{out_units}   = 'in';
+    $self->{calc_method} = 't';
+    $self->{tet}         = 12;
+
+    bless($self, $class);
+    return $self;
+}
+
+sub scale {
+    my($self) = shift;
+    if(@_) { $self->{scale} = shift }
+    return $self->{scale};
+}
+
+sub num_frets {
+    my($self) = shift;
+    if(@_) { $self->{num_frets} = shift }
+    return $self->{num_frets};
+}
+
+sub fret_num {
+    my($self) = shift;
+    if(@_) { $self->{fret_num} = shift }
+    return $self->{fret_num};
+}
+
+sub in_units {
+    my($self) = shift;
+    if(@_) { $self->{in_units} = shift }
+    return $self->{in_units};
+}
+
+sub out_units {
+    my($self) = shift;
+    if(@_) { $self->{out_units} = shift }
+    return $self->{out_units};
+}
+
+sub calc_method {
+    my($self) = shift;
+    if(@_) { $self->{calc_method} = shift }
+    return $self->{calc_method};
+}
+
+sub tet {
+    my($self) = shift;
+    if(@_) { $self->{tet} = shift }
+    return $self->{tet};
+}
 
 sub fretcalc {
 
-    die "Not enough arguments to fretcalc()\n" if @_ < 4;
-    my($scale_length,$num_frets,$in_units,$out_units,
-       $calc_method,$tet) = @_;
-    $calc_method = 't' if !defined $calc_method;
-    $tet = 12 if !defined $tet;
+    my($self) = shift;
+
+    if(@_) { $self->{num_frets} = shift }
 
     my $distance_from_nut = 0;
     my $distance_from_nut_formatted;
 
     my @chart;
-    $chart[0] = sprintf("%8.4f",0) if $out_units eq 'in';
-    $chart[0] = sprintf("%8.1f",0) if $out_units eq 'mm';
+    $chart[0] = sprintf("%8.4f",0) if $self->{out_units} eq 'in';
+    $chart[0] = sprintf("%8.1f",0) if $self->{out_units} eq 'mm';
 
-    for my $i (1..$num_frets) {
-        if ($calc_method eq 't') {
-            $distance_from_nut = ($scale_length - $scale_length/2 ** ($i/$tet));
-        } elsif ($calc_method eq 'ec') {
-            my $x = ($scale_length - $distance_from_nut) / 17.817;
+    for my $i (1..$self->{num_frets}) {
+        if ($self->{calc_method} eq 't') {
+            $distance_from_nut = ($self->{scale} - $self->{scale}/2 ** ($i/$self->{tet}));
+        } elsif ($self->{calc_method} eq 'ec') {
+            my $x = ($self->{scale} - $distance_from_nut) / 17.817;
             $distance_from_nut += $x;
-        } elsif ($calc_method eq 'es') {
-            my $x = ($scale_length - $distance_from_nut) / 17.835;
+        } elsif ($self->{calc_method} eq 'es') {
+            my $x = ($self->{scale} - $distance_from_nut) / 17.835;
             $distance_from_nut += $x;
-        } elsif ($calc_method eq 'ep') {
-            my $x = ($scale_length - $distance_from_nut) / 18;
+        } elsif ($self->{calc_method} eq 'ep') {
+            my $x = ($self->{scale} - $distance_from_nut) / 18;
             $distance_from_nut += $x;
         } else {
-            $distance_from_nut = ($scale_length - $scale_length/2 ** ($i/12));
+            $distance_from_nut = ($self->{scale} - $self->{scale}/2 ** ($i/12));
         }
 
         ### input scale: in, output scale: in
-        if( ($in_units eq 'in') && ($out_units eq 'in') ) {
+        if( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'in') ) {
             $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
         ### input scale: in, output scale: mm
-        } elsif( ($in_units eq 'in') && ($out_units eq 'mm') ) {
+        } elsif( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'mm') ) {
             $distance_from_nut *= 25.4;
             $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
         ### input scale: mm, output scale: in
-        } elsif( ($in_units eq 'mm') && ($out_units eq 'in') ) {
+        } elsif( ($self->{in_units} eq 'mm') && ($self->{out_units} eq 'in') ) {
             $distance_from_nut /=  25.4;
             $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
         #### input scale: mm, out_units: mm
@@ -69,44 +124,43 @@ sub fretcalc {
 
 sub fret {
 
-    die "Not enough arguments to fret()\n" if @_ < 4;
-    my($scale_length,$fret_num,$in_units,$out_units,$calc_method,$tet) = @_;
+    my $self = shift;
 
-    $calc_method = 't' if !defined $calc_method;
-    $tet = 12 if !defined $tet;
+    # Check if fret_num was passed
+    if(@_) { $self->{fret_num} = shift }
 
     my $distance_from_nut = 0;
     my $distance_from_nut_formatted;
-    if ($calc_method eq 't') {
-        $distance_from_nut = ($scale_length - $scale_length/2 ** ($fret_num/$tet));
-    } elsif ($calc_method eq 'ec') {
-        for my $i (1..$fret_num) {
-            my $x = ($scale_length - $distance_from_nut) / 17.817;
+    if ($self->{calc_method} eq 't') {
+        $distance_from_nut = ($self->{scale} - $self->{scale}/2 ** ($self->{fret_num}/$self->{tet}));
+    } elsif ($self->{calc_method} eq 'ec') {
+        for my $i (1..$self->{fret_num}) {
+            my $x = ($self->{scale} - $distance_from_nut) / 17.817;
             $distance_from_nut += $x;
         }
-    } elsif ($calc_method eq 'es') {
-        for my $i (1..$fret_num) {
-            my $x = ($scale_length - $distance_from_nut) / 17.835;
+    } elsif ($self->{calc_method} eq 'es') {
+        for my $i (1..$self->{fret_num}) {
+            my $x = ($self->{scale} - $distance_from_nut) / 17.835;
             $distance_from_nut += $x;
         }
-    } elsif ($calc_method eq 'ep') {
-        for my $i (1..$fret_num) {
-            my $x = ($scale_length - $distance_from_nut) / 18;
+    } elsif ($self->{calc_method} eq 'ep') {
+        for my $i (1..$self->{fret_num}) {
+            my $x = ($self->{scale} - $distance_from_nut) / 18;
             $distance_from_nut += $x;
         }
     } else {
-        $distance_from_nut = ($scale_length - $scale_length/2 ** ($fret_num/$tet));
+        $distance_from_nut = ($self->{scale} - $self->{scale}/2 ** ($self->{fret_num}/$self->{tet}));
     }
 
     ### in_units: in, out_units: in
-    if( ($in_units eq 'in') && ($out_units eq 'in') ) {
+    if( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'in') ) {
         $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
     ### in_units: in, out_units: mm
-    } elsif( ($in_units eq 'in') && ($out_units eq 'mm') ) { 
+    } elsif( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'mm') ) { 
         $distance_from_nut *= 25.4;
         $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
     ### in_units: mm, out_units: in
-    } elsif( ($in_units eq 'mm') && ($out_units eq 'in') ) {
+    } elsif( ($self->{in_units} eq 'mm') && ($self->{out_units} eq 'in') ) {
         $distance_from_nut /= 25.4;
         $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
     ### in_units: mm, out_units: mm
@@ -116,7 +170,9 @@ sub fret {
     return $distance_from_nut_formatted;
 
 }
+
 1;
+
 __END__
 
 =head1 NAME
@@ -125,89 +181,98 @@ Lutherie::FretCalc - Calculate stringed instrument fret locations
 
 =head1 SYNOPSIS
 
-  use Lutherie::FretCalc qw/fret fretcalc/;
+  use Lutherie::FretCalc;
 
-  my $fret = fret($scale_length,$fret_num,$in_units,$out_units,$calc_method);
-  my @chart = fretcalc($scale_length,$num_frets,$in_units,$out_units,
-                       $calc_method,$tet);
+  my $fretcalc = Lutherie::FretCalc->new($scale_length);
+  $fretcalc->in_units('in');
+  $fretcalc->out_units('in');
+  my $fret = $fretcalc->fret($fret_num);
+  my @chart = fretcalc($num_frets);
+                       
 
 
 =head1 DESCRIPTION
 
-C<Lutherie::FretCalc> provides two routines for calculating fret spacing 
+C<Lutherie::FretCalc> provides two methods for calculating fret spacing 
 locations for stringed musical instruments. C<fret()> will find the distance 
 from the nut for a given fret number. C<fretcalc()> will generate an array 
 containing the fret locations for the given number of frets.
 
-=head2 C<fret()>
+=head1 OVERVIEW
 
 =over 4
 
-=item *
-
-C<$scale_length> - Numeric scale length (int or float)
-
-=item *
-
-C<$fret_num> - Fret number being calculated (int)
-
-=item *
-
-C<$in_units> - Scale to be used for the input (Scale length):
-'in' (inches) or 'mm' (millimeters) (int of float)
-
-=item *
-
-C<$out_units> - Scale to be used when displaying the calculations:
-'in' (inches) or 'mm' (millimeters) (int or float)
-
-=item *
-
-C<$calc_method> - Calculation method (optional): 
-'t': tempered - power of $i/$tet (default),
-'ec': classic - 17.817,
-'es': Sloane - 17.835,
-'ep': Primative - 18
-
-=item *
-
-C<$tet> - Tones per Octave (optional, $calc_mode='t' only: default=12) (int)
+=item TODO
 
 =back
 
-=head2 C<fretcalc()>
+=head1 CONSTRUCTOR
 
 =over 4
 
-=item *
+=item new ( SCALE_LENGTH );
 
-C<$scale_length> - Numeric scale length (int of float)
+This is the constructor for a new Lutherie:FretCalc object. C<SCALE_LENGTH>
+is the numeric value for the scale length to be used for the calculation.
+The unit can be set with the C<in_units()> and C<out_units()> methods. 
+The default is 'in' (inches).
 
-=item *
+=back
 
-C<$num_frets> - Number of frets to be calculated (int)
+=head1 METHODS
 
-=item *
+=over 4
 
-C<$in_units> - Scale to be used for the input (Scale length):
-'in' (inches) or 'mm' (millimeters)
+=item scale ( [ SCALE_LENGTH ] )
 
-=item *
+If C<SCALE_LENGTH> is passed, this method will set the scale length. 
+The default value is 25. The scale length is returned. 
 
-C<$out_units> - Scale to be used when displaying the calculations:
-'in' (inches) or 'mm' (millimeters) (int or float)
+=item num_frets ( [ NUM_FRETS ] )
 
-=item *
+If C<NUM_FRETS> is passed, this method will set the number of frets.  
+The default value is 24. The number of frets is returned.
 
-C<$calc_method> - Calculation method (optional): 
+=item fret_num ( [ FRET_NUM ] )
+
+If C<FRET_NUM> is passed, this method will set the fret number.
+The default value is 12. The fret number is returned.
+
+=item in_units ( [ IN_UNITS ] )
+
+If C<IN_UNITS> is passed, this method will set the in units.
+The default is 'in' (inches). The in unit is returned.
+'in' - Inches, 'mm' - Millimeters
+
+=item out_units ( [ OUT_UNITS ] )
+
+If C<OUT_UNITS> is passed, this method will set the out units.
+The default is 'in' (inches). The out unit is returned.
+'in' - Inches, 'mm' - Millimeters
+
+=item calc_method ( [ CALC_METHOD ] )
+
+If C<CALC_METHOD> is passed, this method will set the calc method.
+The default is 't' (tempered). The calc method is returned.
 't': tempered - power of $i/$tet (default),
 'ec': classic - 17.817,
 'es': Sloane - 17.835,
 'ep': Primative - 18
 
-=item *
+=item tet ( [ TET ] )
 
-C<$tet> - Tones per Octave (optional, $calc_mode='t' only: default=12) (int)
+If C<TET> is passed, this method will set the tones per ocatave.
+The default is 12. The number of tones per ocatave is returned.
+This value is only valid when using calc_method = 't'.
+
+=item fret ( [ FRET_NUM ] )
+
+Calculate the distance from the nut to the fret number. 
+
+=item fretcalc ( [ NUM_FRETS ] )
+
+Calculate fret locations for given scale length, number of frets, calc type
+and tet.
 
 =back
 

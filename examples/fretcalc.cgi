@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use CGI qw/:standard/;
-use Lutherie::FretCalc qw/fretcalc/;
+use Lutherie::FretCalc;
 
 # Limit number of frets
 my $MAX_FRETS = 50;
@@ -42,19 +42,23 @@ sub display_results {
       # Get params
       my $scale_length = param('scale_length');
       my $num_frets = param('num_frets');
-      my $scale_type = param('scale_type');
-      my $position_type = param('position_type');
+      my $in_units = param('scale_type');
+      my $out_units = param('position_type');
 
       # Check $num_frets
       $num_frets = $MAX_FRETS unless $num_frets =~ /^\d+$/;
       $num_frets = $MAX_FRETS if $num_frets > $MAX_FRETS;
 
-      $scale_type = 'in' if $scale_type eq 'inches';
-      $scale_type = 'mm' if $scale_type eq 'millimeters';
-      $position_type = 'in' if $position_type eq 'inches';
-      $position_type = 'mm' if $position_type eq 'millimeters';
+      $in_units = 'in' if $in_units eq 'inches';
+      $in_units = 'mm' if $in_units eq 'millimeters';
+      $out_units = 'in' if $out_units eq 'inches';
+      $out_units = 'mm' if $out_units eq 'millimeters';
 
-      my @frets = fretcalc($scale_length,$num_frets,$scale_type,$position_type);
+      my $fretcalc = Lutherie::FretCalc->new($scale_length);
+      $fretcalc->num_frets($num_frets);
+      $fretcalc->in_units($in_units);
+      $fretcalc->out_units($out_units);
+      my @frets = $fretcalc->fretcalc();
 
       print hr,
             '<table border=1>',

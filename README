@@ -2,62 +2,75 @@ NAME
     Lutherie::FretCalc
 
 SYNOPSIS
-    use Lutherie::FretCalc qw/fret fretcalc/;
+    use Lutherie::FretCalc;
 
-    my $fret = fret($scale_length,$fret_num,$in_units,$out_units,
-                    $calc_method,$tet);
-    my @chart = fretcalc($scale_length,$num_frets,$in_units,$out_units,
-                         $calc_method,$tet);
+    my $fretcalc = Lutherie::FretCalc->new($scale_length);
+    $fretcalc->in_units('in');
+    $fretcalc->out_units('in');
+    my $fret = $fretcalc->fret($fret_num);
+    my @chart = fretcalc($num_frets);
 
-DESCRIPTION
-    Lutherie::FretCalc provides two routines for calculating 
-    fret spacing locations for stringed musical instruments.
+CONSTRUCTOR
 
-    fret() will find the distance for the nut for a given fret number.
+    new ( SCALE_LENGTH );
 
-    fretcalc() will generate an array containing the fret locations
-    for a given number of frets.
+    This is the constructor for a new Lutherie:FretCalc object. SCALE_LENGTH
+    is the numeric value for the scale length to be used for the calculation.
+    The unit can be set with the in_units() and out_units() methods. 
+    The default is 'in' (inches).
 
-    fret()
-    ------
-    $scale_length - Numeric scale length (int of float)
+METHODS
 
-    $fret_num - Fret number being calculated (int)
+    scale ( [ SCALE_LENGTH ] )
 
-    $input_scale - Scale to be used for the input (Scale length):
-    'in' (inches) or 'mm' (millimeters) (int or float)
+    If SCALE_LENGTH is passed, this method will set the scale length. 
+    The default value is 25. The scale length is returned. 
 
-    $output_scale - Scale to be used when dipslaying the calculations:
-    'in' (inches) or 'mm' (millimeters) (int of float)
+    num_frets ( [ NUM_FRETS ] )
 
-    $calc_method - Calculation method (optional):
-    't': tempered (default)
-    'ec': classic - 17.817
-    'es': Sloane - 17.835
+    If NUM_FRETS is passed, this method will set the number of frets.  
+    The default value is 24. The number of frets is returned.
+
+    fret_num ( [ FRET_NUM ] )
+
+    If FRET_NUM is passed, this method will set the fret number.
+    The default value is 12. The fret number is returned.
+
+    in_units ( [ IN_UNITS ] )
+
+    If IN_UNITS is passed, this method will set the in units.
+    The default is 'in' (inches). The in unit is returned.
+    'in' - Inches, 'mm' - Millimeters
+
+    out_units ( [ OUT_UNITS ] )
+
+    If OUT_UNITS is passed, this method will set the out units.
+    The default is 'in' (inches). The out unit is returned.
+    'in' - Inches, 'mm' - Millimeters
+
+    calc_method ( [ CALC_METHOD ] )
+
+    If CALC_METHOD is passed, this method will set the calc method.
+    The default is 't' (tempered). The calc method is returned.
+    't': tempered - power of $i/$tet (default),
+    'ec': classic - 17.817,
+    'es': Sloane - 17.835,
     'ep': Primative - 18
 
-    $tet - Tones per Octave (optional, $calc_method='t' only: default=12) (int)
+    tet ( [ TET ] )
 
-    fretcalc()
-    ---------- 
+    If TET is passed, this method will set the tones per ocatave.
+    The default is 12. The number of tones per ocatave is returned.
+    This value is only valid when using calc_method = 't'.
 
-    $scale_length - Numeric scale length (int of float)
+    fret ( [ FRET_NUM ] )
 
-    $num_frets - Number of frets to be calculated (int)
+    Calculate the distance from the nut to the fret number. 
 
-    $input_scale - Scale to be used for the input (Scale length):
-    'in' (inches) or 'mm' (millimeters) (int or float)
+    fretcalc ( [ NUM_FRETS ] )
 
-    $output_scale - Scale to be used when dipslaying the calculations:
-    'in' (inches) or 'mm' (millimeters) (int of float)
-
-    $calc_method - Calculation method (optional):
-    't': tempered (default)
-    'ec': classic - 17.817
-    'es': Sloane - 17.835
-    'ep': Primative - 18
-
-    $tet - Tones per Octave (optional, $calc_method='t' only: default=12) (int)
+    Calculate fret locations for given scale length, number of frets, calc type
+    and tet.
 
 
     Please let me know of any bugs you find or if you have any other

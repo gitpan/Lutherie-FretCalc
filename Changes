@@ -16,3 +16,6 @@ Revision history for Perl extension Lutherie::FretCalc.
         - Added additional calculation methods
         - Added non 12-tone calculation
         - Modified example scripts 
+
+0.20  Mon July 23 2001
+        - Module rewrite to OO style. Not backwards compatible.

@@ -1,16 +1,18 @@
 #!/usr/bin/perl -w
 use strict;
-use Lutherie::FretCalc qw/fret fretcalc/;
+use Lutherie::FretCalc;
 
-my $scale_length = 25;
-my $num_frets = 24;
-my $in_units = 'in';
-my $out_units = 'in';
-my $calc_method = 't';
-my $tet = 12;
+# Create new FretCalc object
+my $fretcalc = Lutherie::FretCalc->new; # Default 25
+# Config
+$fretcalc->num_frets(24);               # Default 24
+$fretcalc->in_units('in');              # Default 'in'
+$fretcalc->out_units('in');             # Default 'in'
+$fretcalc->calc_method('t');            # Default 't'
+$fretcalc->tet(12);                     # Default 12
 
-my @chart = fretcalc($scale_length, $num_frets, $in_units, $out_units,
-                     $calc_method,$tet);
+
+my @chart = $fretcalc->fretcalc(); 
 
 for my $fret(1..$#chart) {
     $fret = sprintf("%3d",$fret);
@@ -19,7 +21,7 @@ for my $fret(1..$#chart) {
 
 print "\n\n";
 
-my $fret_num = 2;
-my $fret = fret($scale_length,$fret_num,$in_units,$out_units,$calc_method,$tet);
-$fret_num = sprintf("%3d",$fret_num);
+$fretcalc->fret_num(2);
+my $fret = $fretcalc->fret();
+my $fret_num = sprintf("%3d",$fretcalc->{fret_num});
 print "Fret $fret_num: $fret\n";
