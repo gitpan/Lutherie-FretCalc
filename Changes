@@ -6,3 +6,9 @@ Revision history for Perl extension Lutherie::FretCalc.
 
 0.14  Sun March 11 2001
         - Created example scripts, fretcalc.pl and fretcalc.cgi
+
+0.15  Tue March 13 2001
+        - Removed test line from fretcalc.cgi
+        - Fixed bug in fret()
+        - Fix typos in README
+        - Remove common code from while loop

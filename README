@@ -1,66 +1,58 @@
-README for Lutherie::FretCalc
+NAME
+    Lutherie::FretCalc
 
-Lutherie::FretCalc provides two routines for calculating 
-fret spacing locations for stringed musical instruments.
-fret() will find the distance for the nut for a given
-fret number. fretcalc() will generate an array containing
-the fret locations for a given number of frets.
+DESCRIPTION
+    Lutherie::FretCalc provides two routines for calculating 
+    fret spacing locations for stringed musical instruments.
 
-$scale_length is the numeric scale length
-$fret_num is the fret number being calculated (C<fret> only)
-$num_frets is the number of frets to be calculated (C<fretcalc> only)
-$input_scale is the scale to be used for the input (Scale length):
-'in' (inches) or 'mm' (millimeters)
-$output_scale if the scale to be used when dipslaying the calculations:
-'in' (inches) or 'mm' (millimeters)
+    fret() will find the distance for the nut for a given fret number.
 
-Please let me know of any bugs you find or if you have any other
-routines you would like to contribute.
+    fretcalc() will generate an array containing the fret locations
+    for a given number of frets.
 
-Requirements:
--------------
-Perl version 5.000 or higher. Developed using version 5.6 on Linux.
+    $scale_length is the numeric scale length
+    $fret_num is the fret number being calculated (fret() only)
+    $num_frets is the number of frets to be calculated (fretcalc() only)
+    $input_scale is the scale to be used for the input (Scale length):
+    'in' (inches) or 'mm' (millimeters)
+    $output_scale if the scale to be used when dipslaying the calculations:
+    'in' (inches) or 'mm' (millimeters)
 
-Where can I get it from?
------------------------- 
-  http://www.dougsparling.com/
+    Please let me know of any bugs you find or if you have any other
+    routines you would like to contribute.
 
-Installation:
--------------
- % perl Makefile.PL
- % make
- % make test
- % make install
+REQUIREMENTS
+    Perl version 5.000 or higher. Developed using version 5.6 on Linux.
 
-Documentation:
---------------
-Documentation is included in the module as POD. A man file should be
-created in the installation process.
+WHERE CAN I GET IT?
+    www.cpan.org/authors/id/D/DS/DSPARLING 
 
-Changes:
---------
-See the Changes file
+INSTALLATION
+    perl Makefile.PL
+    make
+    make test
+    make install
 
-Author:
--------
-Doug Sparling	doug@dougsparling.com
+DOCUMENTATION
+    Documentation is included in the module as POD. A man file should be
+    created in the installation process.
 
-Disclaimer:
------------
-This program is distributed inthe hope that it will be
-useful, but without any warranty; without even the implied
-warranty of merchantability or fitness for a particular
-purpose.
+CHANGES
+    See the Changes file
 
-Support:
---------
-Questions, but reports, useful code bits, and suggestions for
-Lutherie::FretCalc should be sent to me at doug@dougsparling.com
+AUTHOR
+    Doug Sparling <doug@dougsparling.com>
 
-Copyright:
-----------
-Copyright (c) 2001 Douglas Sparling. All rights reserved.
-This program is free software; you can redistribute it
-and/or modify it under the same terms as Perl itself.
+DISCLAIMER
+    This program is distributed inthe hope that it will be
+    useful, but without any warranty; without even the implied
+    warranty of merchantability or fitness for a particular purpose.
 
+SUPPORT
+    Questions, but reports, useful code bits, and suggestions for
+    Lutherie::FretCalc should be sent to me at doug@dougsparling.com
 
+COPYRIGHT
+    Copyright (c) 2001 Douglas Sparling. All rights reserved.
+    This program is free software; you can redistribute it
+    and/or modify it under the same terms as Perl itself.

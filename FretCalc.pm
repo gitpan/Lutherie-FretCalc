@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT_OK = qw(fretcalc fret);
 @EXPORT = ();
 
-$VERSION = '0.14';
+$VERSION = '0.15';
 
 sub fretcalc {
 
@@ -33,22 +33,19 @@ sub fretcalc {
         ### input scale: in, output scale: in
         if( ($input_scale eq 'in') && ($output_scale eq 'in') ) {
             $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
-            push @chart, $distance_from_nut_formatted;
         ### input scale: in, output scale: mm
         } elsif( ($input_scale eq 'in') && ($output_scale eq 'mm') ) {
             $distance_from_nut *= 25.4;
             $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
-            push @chart, $distance_from_nut_formatted;
         ### input scale: mm, output scale: in
         } elsif( ($input_scale eq 'mm') && ($output_scale eq 'in') ) {
             $distance_from_nut /=  25.4;
             $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
-            push @chart, $distance_from_nut_formatted;
         #### input scale: mm, output_scale: mm
         } else {
             $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
-            push @chart, $distance_from_nut_formatted;
         }
+        push @chart, $distance_from_nut_formatted;
     }
     return @chart;
 
@@ -57,7 +54,7 @@ sub fretcalc {
 sub fret {
 
     die "Not enough arguments to fret()\n" if @_ < 4;
-    my($scale_length,$fret_num,$input_scale,$output_scale) = shift;
+    my($scale_length,$fret_num,$input_scale,$output_scale) = @_;
 
     my $distance_from_nut = ($scale_length - $scale_length/2 ** ($fret_num/12));
     my $distance_from_nut_formatted;

@@ -1,7 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
 use CGI qw/:standard/;
-use lib '/home/std1/sparling/doug/perlmodules';
 use Lutherie::FretCalc qw/fretcalc/;
 
 # Limit number of frets
