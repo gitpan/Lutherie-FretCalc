@@ -7,7 +7,7 @@ package Lutherie::FretCalc;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '0.32';
+$VERSION = '0.33';
 
 sub new {
     my $proto = shift;
@@ -121,7 +121,7 @@ sub fretcalc {
     my $distance_from_nut = 0;
     my $distance_from_nut_formatted;
 
-    my @chart;
+    my @chart = ();
     # Set precision
     my $prec;
     $prec = '%8.0f' if $self->{precision} == 0;
@@ -131,7 +131,7 @@ sub fretcalc {
     $prec = '%8.4f' if $self->{precision} == 4;
     $prec = '%8.5f' if $self->{precision} == 5;
     $prec = '%8.6f' if $self->{precision} == 6;
-    $chart[0] = sprintf("$prec",0) if $self->{out_units} eq 'in';
+    $chart[0] = sprintf("$prec",0);
 
     for my $i (1..$self->{num_frets}) {
         if ($self->{calc_method} eq 't') {
@@ -166,6 +166,7 @@ sub fretcalc {
         }
         push @chart, $distance_from_nut_formatted;
     }
+
     return @chart;
 
 }

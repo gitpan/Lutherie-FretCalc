@@ -32,4 +32,8 @@ Revision history for Perl extension Lutherie::FretCalc.
 0.32  Sat June 16 2002
         - Added num_frets to constructor
         - Added precision() method
-        - Added dulcimer mode to fretcalctk.pl (v 0.2)
+        - Added dulcimer mode to fretcalctk.pl (v 0.02)
+
+0.33  Mon June 18 2002
+        - Added in units, out units, calc method and
+          settings dislay to fretcalctk.pl (v 0.03)
