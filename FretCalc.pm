@@ -7,7 +7,7 @@ package Lutherie::FretCalc;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '0.30';
+$VERSION = '0.31';
 
 sub new {
     my $proto = shift;
@@ -243,7 +243,7 @@ Lutherie::FretCalc - Calculate stringed instrument fret locations
   $fretcalc->in_units('in');
   $fretcalc->out_units('in');
   my $fret = $fretcalc->fret($fret_num);
-  my @chart = fretcalc($num_frets);
+  my @chart = $fretcalc->fretcalc($num_frets);
                        
 
 
@@ -348,8 +348,8 @@ Doug Sparling, doug@dougsparling.com
 
 =head1 COPYRIGHT
 
-Copyright (c) 2001 Douglas Sparling. All rights reserved. This program is free
-software; you can redistribute it and/or modify it under the same terms
+Copyright (c) 2001-2002 Douglas Sparling. All rights reserved. This program is
+free software; you can redistribute it and/or modify it under the same terms
 as Perl itself.
 
 =cut

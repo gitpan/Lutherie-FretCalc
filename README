@@ -8,7 +8,7 @@ SYNOPSIS
     $fretcalc->in_units('in');
     $fretcalc->out_units('in');
     my $fret = $fretcalc->fret($fret_num);
-    my @chart = fretcalc($num_frets);
+    my @chart = $fretcalc->fretcalc($num_frets);
 
 CONSTRUCTOR
 

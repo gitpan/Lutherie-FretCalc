@@ -24,3 +24,7 @@ Revision history for Perl extension Lutherie::FretCalc.
         - Added dulc_calc() function 
         - Added dulc_calc.pl and dulc_calc.cgi scripts
         - Added calc_type to fretcalc.cgi and dulc_calc.cgi
+
+0.31  Sat June 15 2002
+        - Fixed error in Synopsis 
+        - Added a basic Tk script in examples directory

@@ -8,4 +8,5 @@ examples/dulc_calc.cgi
 examples/dulc_calc.pl
 examples/fretcalc.cgi
 examples/fretcalc.pl
+examples/fretcalctk.pl
 test.pl
