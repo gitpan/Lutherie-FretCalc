@@ -12,11 +12,13 @@ SYNOPSIS
 
 CONSTRUCTOR
 
-    new ( SCALE_LENGTH );
+    new ( [SCALE_LENGTH[, NUM_FRETS]] );
 
     This is the constructor for a new Lutherie::FretCalc object. SCALE_LENGTH
     is the numeric value for the scale length to be used for the calculation.
     The default value for scale length is 25.
+    NUM_FRETS is the number of frets to be calculated.
+    The default value for num_frets is 24.
     The unit can be set with the in_units() and out_units() methods. 
     The default is 'in' (inches).
 
@@ -60,9 +62,22 @@ METHODS
 
     tet ( [ TET ] )
 
-    If TET is passed, this method will set the tones per ocatave.
-    The default is 12. The number of tones per ocatave is returned.
+    If TET is passed, this method will set the tones per octave.
+    The default is 12. The number of tones per octave is returned.
     This value is only valid when using calc_method = 't'.
+
+    precision ( [ PRECISION ] )
+
+    If PRECISION is passed, this method will set the precision of
+    the displayed calculations. The default is 4 for 'in' and
+    1 for 'mm'. The precision is returned.
+    0: "%8.0f"
+    1: "%8.1f"
+    2: "%8.2f"
+    3: "%8.3f"
+    4: "%8.4f"
+    5: "%8.5f"
+    6: "%8.6f"
 
     half_fret ( [ FRET_NUM ] )
         If FRET_NUM is passed, this method will calculate
@@ -105,6 +120,10 @@ INSTALLATION
     make test
     make install
 
+    Lutherie::FretCalc is a pure Perl module. You may install in manually
+    in any directory included in @INC, or in the same directory as any
+    script that requires it.
+
 DOCUMENTATION
     Documentation is included in the module as POD. A man file should be
     created in the installation process.
@@ -113,7 +132,7 @@ CHANGES
     See the Changes file
 
 AUTHOR
-    Doug Sparling <doug@dougsparling.com>
+    Douglas Sparling <doug@dougsparling.com>
 
 DISCLAIMER
     This program is distributed inthe hope that it will be
@@ -125,6 +144,6 @@ SUPPORT
     Lutherie::FretCalc should be sent to me at doug@dougsparling.com
 
 COPYRIGHT
-    Copyright (c) 2001 Douglas Sparling. All rights reserved.
+    Copyright (c) 2001-2002 Douglas Sparling. All rights reserved.
     This program is free software; you can redistribute it
     and/or modify it under the same terms as Perl itself.

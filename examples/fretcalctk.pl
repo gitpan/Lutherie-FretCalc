@@ -10,9 +10,9 @@ use Tk;
 use Tk::Dialog;
 use Lutherie::FretCalc;
 
-my $VERSION = '0.1';
+my $VERSION = '0.2';
 
-my $rb1 = 0; # Method
+my $rb1 = 0; # Mode
 my $rb2 = 0; # Precision
 #my $rb3 = 0; # Scale Length Type
 
@@ -75,12 +75,12 @@ $menu_file->command(-label => 'Exit',
 my $menu_mode_cascade = $menu_calc->menu->Menu();
 
 $menu_mode_cascade->radiobutton(-label => 'Standard',
-                           -command => \&mode,
+                           #-command => \&mode,
                            -variable => \$rb1,
                            -value => 'Standard');
 
 $menu_mode_cascade->radiobutton(-label => 'Dulcimer',
-                           -command => \&mode,
+                           #-command => \&mode,
                            -variable => \$rb1,
                            -value => 'Dulcimer');
 
@@ -174,9 +174,10 @@ $mw->Button(-text => 'Exit',
 
 
 # Initialize
+my $fretcalc = Lutherie::FretCalc->new();
 $scale_length->focus();
 $rb1 = 'Standard';
-$rb2 = '.001';
+$rb2 = '.0001';
 my $item = "Fret\tDist from Nut\n";
 $text->delete('1.0', 'end');
 $text->insert('end', $item);
@@ -187,33 +188,43 @@ MainLoop;
 
 sub calculate {
 
-    my $fretcalc = Lutherie::FretCalc->new();
+    # Set precision
+    if ($rb2 == .1) {
+        $fretcalc->precision(1);
+    } elsif ($rb2 == .01) {
+        $fretcalc->precision(2);
+    } elsif ($rb2 == .001) {
+        $fretcalc->precision(3);
+    } elsif ($rb2 == .0001) {
+        $fretcalc->precision(4);
+    }
+
     my $sl = $scale_length->get();
     my $nf = $num_frets->get();
 
     $fretcalc->scale($sl);
     $fretcalc->num_frets($nf);
 
-    my @chart = $fretcalc->fretcalc();
-
+    #my ($item, @chart, %chart);
     my $item = "Fret\tDist from Nut\n";
-    for my $fret(1..$#chart) {
-        $fret = sprintf("%3d",$fret);
-        my $dist = $chart[$fret];
-
-        # Set precision
-        if ($rb2 == .1) {
-            $dist = sprintf("%.1f",$dist);
-        } elsif ($rb2 == .01) {
-            $dist = sprintf("%.2f",$dist);
-        } elsif ($rb2 == .001) {
-            $dist = sprintf("%.3f",$dist);
-        } elsif ($rb2 == .0001) {
-            $dist = sprintf("%.4f",$dist);
+    if( $rb1 eq 'Standard' ) {
+        my @chart = $fretcalc->fretcalc();
+        $item = "Fret\tDist from Nut\n";
+        for my $fret(1..$#chart) {
+            $fret = sprintf("%3d",$fret);
+            $item .= "$fret\t$chart[$fret]\n";
         }
-    
-        $item .= "$fret\t$dist\n";
+    } elsif( $rb1 eq 'Dulcimer' ) {
+        $fretcalc->half_fret(6);
+        $fretcalc->half_fret(13);
+        my %chart = $fretcalc->dulc_calc();
+        foreach my $fret (sort {$a <=> $b} keys %chart) {
+            my $dist = $chart{$fret};
+            my $fret = sprintf("%4s",$fret);
+            $item .= "$fret\t$dist\n";
+        }
     }
+
     chomp $item;
 
     $text->delete('1.0', 'end');

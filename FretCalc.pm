@@ -7,7 +7,7 @@ package Lutherie::FretCalc;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '0.31';
+$VERSION = '0.32';
 
 sub new {
     my $proto = shift;
@@ -19,12 +19,18 @@ sub new {
     } else {
         $self->{scale} = 25;
     }
-    $self->{num_frets}   = 24;
+    if (defined $_[1]) {
+        $self->{num_frets} = $_[1];
+    } else {
+        $self->{num_frets} = 24;
+    }
+    #$self->{num_frets}  = 24;
     $self->{fret_num}    = 12;
     $self->{in_units}    = 'in';
     $self->{out_units}   = 'in';
     $self->{calc_method} = 't';
     $self->{tet}         = 12;
+    $self->{precision}   = 4; # Precision for 'in'
     #$self->{half_fret}   = ();
 
     bless($self, $class);
@@ -57,7 +63,16 @@ sub in_units {
 
 sub out_units {
     my($self) = shift;
-    if(@_) { $self->{out_units} = shift }
+    if(@_) { 
+        my $out_units = shift;
+        # Set precision defaults
+        if( $out_units eq 'in' ) {
+            $self->{precision} = 4;
+        } else {
+            $self->{precision} = 1;
+        }
+        $self->{out_units} = $out_units; 
+    }
     return $self->{out_units};
 }
 
@@ -71,6 +86,16 @@ sub tet {
     my($self) = shift;
     if(@_) { $self->{tet} = shift }
     return $self->{tet};
+}
+
+sub precision {
+    my($self) = shift;
+    if(@_) { 
+        my $prec = shift;
+        $prec = 4 if $prec < 0 or $prec > 6;
+        $self->{precision} = $prec; 
+    }
+    return $self->{precision};
 }
 
 sub half_fret {
@@ -97,8 +122,16 @@ sub fretcalc {
     my $distance_from_nut_formatted;
 
     my @chart;
-    $chart[0] = sprintf("%8.4f",0) if $self->{out_units} eq 'in';
-    $chart[0] = sprintf("%8.1f",0) if $self->{out_units} eq 'mm';
+    # Set precision
+    my $prec;
+    $prec = '%8.0f' if $self->{precision} == 0;
+    $prec = '%8.1f' if $self->{precision} == 1;
+    $prec = '%8.2f' if $self->{precision} == 2;
+    $prec = '%8.3f' if $self->{precision} == 3;
+    $prec = '%8.4f' if $self->{precision} == 4;
+    $prec = '%8.5f' if $self->{precision} == 5;
+    $prec = '%8.6f' if $self->{precision} == 6;
+    $chart[0] = sprintf("$prec",0) if $self->{out_units} eq 'in';
 
     for my $i (1..$self->{num_frets}) {
         if ($self->{calc_method} eq 't') {
@@ -118,18 +151,18 @@ sub fretcalc {
 
         ### input scale: in, output scale: in
         if( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'in') ) {
-            $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
+            $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
         ### input scale: in, output scale: mm
         } elsif( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'mm') ) {
             $distance_from_nut *= 25.4;
-            $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
+            $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
         ### input scale: mm, output scale: in
         } elsif( ($self->{in_units} eq 'mm') && ($self->{out_units} eq 'in') ) {
             $distance_from_nut /=  25.4;
-            $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
+            $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
         #### input scale: mm, out_units: mm
         } else {
-            $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
+            $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
         }
         push @chart, $distance_from_nut_formatted;
     }
@@ -143,6 +176,16 @@ sub fret {
 
     # Check if fret_num was passed
     if(@_) { $self->{fret_num} = shift }
+
+    # Set precision
+    my $prec;
+    $prec = '%8.0f' if $self->{precision} == 0;
+    $prec = '%8.1f' if $self->{precision} == 1;
+    $prec = '%8.2f' if $self->{precision} == 2;
+    $prec = '%8.3f' if $self->{precision} == 3;
+    $prec = '%8.4f' if $self->{precision} == 4;
+    $prec = '%8.5f' if $self->{precision} == 5;
+    $prec = '%8.6f' if $self->{precision} == 6;
 
     my $distance_from_nut = 0;
     my $distance_from_nut_formatted;
@@ -169,18 +212,18 @@ sub fret {
 
     ### in_units: in, out_units: in
     if( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'in') ) {
-        $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
+        $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
     ### in_units: in, out_units: mm
     } elsif( ($self->{in_units} eq 'in') && ($self->{out_units} eq 'mm') ) { 
         $distance_from_nut *= 25.4;
-        $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
+        $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
     ### in_units: mm, out_units: in
     } elsif( ($self->{in_units} eq 'mm') && ($self->{out_units} eq 'in') ) {
         $distance_from_nut /= 25.4;
-        $distance_from_nut_formatted = sprintf("%8.4f",$distance_from_nut);
+        $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
     ### in_units: mm, out_units: mm
     } else {
-        $distance_from_nut_formatted = sprintf("%8.1f",$distance_from_nut);
+        $distance_from_nut_formatted = sprintf("$prec",$distance_from_nut);
     }
     return $distance_from_nut_formatted;
 
@@ -266,11 +309,13 @@ containing the fret locations for the given number of frets.
 
 =over 4
 
-=item new ( SCALE_LENGTH );
+=item new ( [SCALE_LENGTH[, NUM_FRETS]] );
 
 This is the constructor for a new Lutherie::FretCalc object. C<SCALE_LENGTH>
 is the numeric value for the scale length to be used for the calculation.
 The default value for scale length is 25.
+C<NUM_FRETS> is the number of frets to be calculated.
+The default value is 24.
 The unit can be set with the C<in_units()> and C<out_units()> methods. 
 The default is 'in' (inches).
 
@@ -318,9 +363,22 @@ The default is 't' (tempered). The calc method is returned.
 
 =item tet ( [ TET ] )
 
-If C<TET> is passed, this method will set the tones per ocatave.
+If C<TET> is passed, this method will set the tones per octave.
 The default is 12. The number of tones per ocatave is returned.
 This value is only valid when using calc_method = 't'.
+
+=item precision ( [ PRECISION ] )
+
+If C<PRECISION> is passed, this method will set the precision of
+the displayed calculations. The default is 4 for 'in' and
+1 for 'mm'. The precision is returned.
+0: "%8.0f" 
+1: "%8.1f" 
+2: "%8.2f" 
+3: "%8.3f" 
+4: "%8.4f" 
+5: "%8.5f" 
+6: "%8.6f" 
 
 =item half_fret ( [ FRET_NUM ] )
 
@@ -344,7 +402,7 @@ Half frets may be added by using C<half_fret> function. Valid half frets are 1+,
 
 =head1 AUTHOR
 
-Doug Sparling, doug@dougsparling.com
+Douglas Sparling, doug@dougsparling.com
 
 =head1 COPYRIGHT
 

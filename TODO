@@ -1,6 +1,5 @@
 TODO
 
- - Add 'precision' method
  - Add fractional calculations
  - Add fret to fret calculations
  - Beautify POD and improve documentation

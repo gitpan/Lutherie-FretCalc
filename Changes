@@ -21,10 +21,15 @@ Revision history for Perl extension Lutherie::FretCalc.
         - Module rewrite to OO style. Not backwards compatible.
 
 0.30  Wed Sept 05 2001
-        - Added dulc_calc() function 
+        - Added dulc_calc() method 
         - Added dulc_calc.pl and dulc_calc.cgi scripts
         - Added calc_type to fretcalc.cgi and dulc_calc.cgi
 
 0.31  Sat June 15 2002
         - Fixed error in Synopsis 
-        - Added a basic Tk script in examples directory
+        - Added a basic Tk script (fretcalctk.pl) in examples directory
+
+0.32  Sat June 16 2002
+        - Added num_frets to constructor
+        - Added precision() method
+        - Added dulcimer mode to fretcalctk.pl (v 0.2)
