@@ -7,7 +7,7 @@ package Lutherie::FretCalc;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '0.20';
+$VERSION = '0.30';
 
 sub new {
     my $proto = shift;
@@ -25,6 +25,7 @@ sub new {
     $self->{out_units}   = 'in';
     $self->{calc_method} = 't';
     $self->{tet}         = 12;
+    #$self->{half_fret}   = ();
 
     bless($self, $class);
     return $self;
@@ -71,6 +72,20 @@ sub tet {
     if(@_) { $self->{tet} = shift }
     return $self->{tet};
 }
+
+sub half_fret {
+    my($self) = shift;
+    #if(@_) { $self->{half_fret} = shift }
+    if(@_) { 
+        if($self->{half_fret}) {
+            $self->{half_fret} = join(',', $self->{half_fret},shift);
+        } else {
+            $self->{half_fret} = shift;
+        }
+    }
+    return $self->{half_fret};
+}
+
 
 sub fretcalc {
 
@@ -171,6 +186,47 @@ sub fret {
 
 }
 
+sub dulc_calc {
+    my($self) = shift;
+    my %dulc;
+    my @frets = $self->fretcalc(24); # Use 24 frets for dulcimer
+
+    # Set standard frets
+    $dulc{1} = $frets[2];
+    $dulc{2} = $frets[4];
+    $dulc{3} = $frets[5];
+    $dulc{4} = $frets[7];
+    $dulc{5} = $frets[9];
+    $dulc{6} = $frets[10];
+    $dulc{7} = $frets[12];
+
+    $dulc{8} = $frets[14];
+    $dulc{9} = $frets[16];
+    $dulc{10} = $frets[17];
+    $dulc{11} = $frets[19];
+    $dulc{12} = $frets[21];
+    $dulc{13} = $frets[22];
+    $dulc{14} = $frets[24];
+
+    # Add the half frets (valid = 1,6,8,13)
+    my @half_frets = split(/,/,$self->{half_fret});
+    foreach my $half( @half_frets ) {
+        if( $half == 1 ) {
+            $dulc{1.5} = $frets[3];
+        } elsif( $half == 6 ) {
+            $dulc{6.5} = $frets[11];
+        } elsif( $half == 8 ) {
+            $dulc{8.5} = $frets[15];
+        } elsif( $half == 13 ) {
+            $dulc{13.5} = $frets[23];
+        }
+    }
+
+    return %dulc;
+
+}
+
+
 1;
 
 __END__
@@ -212,8 +268,9 @@ containing the fret locations for the given number of frets.
 
 =item new ( SCALE_LENGTH );
 
-This is the constructor for a new Lutherie:FretCalc object. C<SCALE_LENGTH>
+This is the constructor for a new Lutherie::FretCalc object. C<SCALE_LENGTH>
 is the numeric value for the scale length to be used for the calculation.
+The default value for scale length is 25.
 The unit can be set with the C<in_units()> and C<out_units()> methods. 
 The default is 'in' (inches).
 
@@ -265,14 +322,23 @@ If C<TET> is passed, this method will set the tones per ocatave.
 The default is 12. The number of tones per ocatave is returned.
 This value is only valid when using calc_method = 't'.
 
+=item half_fret ( [ FRET_NUM ] )
+
+If C<FRET_NUM> is passed, this method will calculate the half fret for this fret number. Valid values are 1, 6, 8 and 13. Only used with C<dulc_calc()>. A comma separated list of half frets is returned.
+
 =item fret ( [ FRET_NUM ] )
 
-Calculate the distance from the nut to the fret number. 
+Calculate the distance from the nut to the fret number. A scalar containing the fret location for C<FRET_NUM> is returned.
 
 =item fretcalc ( [ NUM_FRETS ] )
 
 Calculate fret locations for given scale length, number of frets, calc type
-and tet.
+and tet. An ordered array containing fret locations from 1 to C<NUM_FRETS> is returned.
+
+=item dulc_calc ( )
+
+Calculate fret locations for mountain dulcimer. Number of frets is set at 14.
+Half frets may be added by using C<half_fret> function. Valid half frets are 1+, 6+, 8+ and 13+. C<num_frets> will be ignored when using C<dulc_calc>. A hash containing fret locations from 1 to 14 is returned.
 
 =back
 

@@ -14,8 +14,9 @@ CONSTRUCTOR
 
     new ( SCALE_LENGTH );
 
-    This is the constructor for a new Lutherie:FretCalc object. SCALE_LENGTH
+    This is the constructor for a new Lutherie::FretCalc object. SCALE_LENGTH
     is the numeric value for the scale length to be used for the calculation.
+    The default value for scale length is 25.
     The unit can be set with the in_units() and out_units() methods. 
     The default is 'in' (inches).
 
@@ -63,14 +64,30 @@ METHODS
     The default is 12. The number of tones per ocatave is returned.
     This value is only valid when using calc_method = 't'.
 
+    half_fret ( [ FRET_NUM ] )
+        If FRET_NUM is passed, this method will calculate
+        the half fret for this fret number. Valid values are
+        1, 6, 8 and 13. Only used with dulc_calc().
+        A comma separated list of half frets is returned.
+
     fret ( [ FRET_NUM ] )
 
     Calculate the distance from the nut to the fret number. 
+    A scalar containing fret location for FRET_NUM is returned.
 
     fretcalc ( [ NUM_FRETS ] )
 
     Calculate fret locations for given scale length, number of frets, calc type
-    and tet.
+    and tet. An ordered array containing fret locations from 1 to NUM_FRETS 
+    is returned.
+
+    dulc_calc ( )
+        Calculate fret locations for mountain dulcimer. Number
+        of frets is set at :w14. Half frets may be added by 
+        using half_fret() function. Valid half frets are 1+,
+        6+, 8+ and 13+. num_frets() will be ignored when using
+        dulc_calc(). A hash containing fret locations from 1 to 14
+        is returned.
 
 
     Please let me know of any bugs you find or if you have any other

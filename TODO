@@ -1,5 +1,7 @@
 TODO
 
+ - Add fractional calculations
+ - Add fret to fret calculations
  - Beautify POD and improve documentation
  - Add calc methods and tet to cgi
  - Mountain dulcimer calculations

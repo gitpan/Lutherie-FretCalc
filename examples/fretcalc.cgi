@@ -6,6 +6,8 @@ use Lutherie::FretCalc;
 # Limit number of frets
 my $MAX_FRETS = 50;
 
+my %calc_method_labels = (t=>'12th root of 2', ec=>17.817, es=>17.835);
+
 print header,
       start_html(-title=>'FretCalc'),
       h1('Fret Placement Calculator'),
@@ -13,15 +15,21 @@ print header,
       table(TR,
              td('Scale Length:'),
              td(textfield(-name=>'scale_length')),
-             td(radio_group(-name=>'scale_type',
+             td(radio_group(-name=>'in_units',
                             -values=>['inches','millimeters'],
                             -default=>'inches')),
            TR,
              td('Number of Frets:'), 
              td(textfield(-name=>'num_frets')),
-             td(radio_group(-name=>'position_type',
+             td(radio_group(-name=>'out_units',
                             -values=>['inches','millimeters'],
                             -default=>'inches')),
+           TR,
+             td('Calc Method:'), 
+             td(radio_group(-name=>'calc_method',
+                            -values=>['t','ec', 'es'],
+                            -default=>'t',
+                            -labels=>\%calc_method_labels)),
           
       ),
       submit,
@@ -29,6 +37,7 @@ print header,
 
 display_results() if param();
 
+footer();
 print end_html;
 
 ################################################
@@ -42,8 +51,9 @@ sub display_results {
       # Get params
       my $scale_length = param('scale_length');
       my $num_frets = param('num_frets');
-      my $in_units = param('scale_type');
-      my $out_units = param('position_type');
+      my $in_units = param('in_units');
+      my $out_units = param('out_units');
+      my $calc_method = param('calc_method');
 
       # Check $num_frets
       $num_frets = $MAX_FRETS unless $num_frets =~ /^\d+$/;
@@ -58,6 +68,7 @@ sub display_results {
       $fretcalc->num_frets($num_frets);
       $fretcalc->in_units($in_units);
       $fretcalc->out_units($out_units);
+      $fretcalc->calc_method($calc_method);
       my @frets = $fretcalc->fretcalc();
 
       print hr,
@@ -80,4 +91,10 @@ sub display_results {
             "'Scale length' and 'number of frets' must be numeric";
    }
      
+}
+
+sub footer {
+    print hr;
+    print qq!Powered by <a href="http://search.cpan.org/search?dist=Lutherie-FretCalc">Lutherie::FretCalc</a><br>\n!;
+
 }

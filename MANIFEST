@@ -1,9 +1,11 @@
-README
 Changes
 FretCalc.pm
 MANIFEST
-TODO
 Makefile.PL
-test.pl
-examples/fretcalc.pl
+README
+TODO
+examples/dulc_calc.cgi
+examples/dulc_calc.pl
 examples/fretcalc.cgi
+examples/fretcalc.pl
+test.pl
