@@ -1,8 +1,9 @@
 TODO
 
- - Moutain dulcimer calculations
+ - Beautify POD and improve documentation
+ - Add calc methods and tet to cgi
+ - Mountain dulcimer calculations
  - Add default for input/output scales
- - Allow any number of frets per ocatve
  - Enumerate scale lengths: 'Gibson', 'Fender', etc.
  - Add just intonation calculations
  - GUI (Perl/Tk) interface

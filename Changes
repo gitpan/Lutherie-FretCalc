@@ -12,3 +12,7 @@ Revision history for Perl extension Lutherie::FretCalc.
         - Fixed bug in fret()
         - Fix typos in README
         - Remove common code from while loop
+0.16  Fri June 29 2001
+        - Added additional calculation methods
+        - Added non 12-tone calculation
+        - Modified example scripts 

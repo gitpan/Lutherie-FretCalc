@@ -1,6 +1,14 @@
 NAME
     Lutherie::FretCalc
 
+SYNOPSIS
+    use Lutherie::FretCalc qw/fret fretcalc/;
+
+    my $fret = fret($scale_length,$fret_num,$in_units,$out_units,
+                    $calc_method,$tet);
+    my @chart = fretcalc($scale_length,$num_frets,$in_units,$out_units,
+                         $calc_method,$tet);
+
 DESCRIPTION
     Lutherie::FretCalc provides two routines for calculating 
     fret spacing locations for stringed musical instruments.
@@ -10,13 +18,47 @@ DESCRIPTION
     fretcalc() will generate an array containing the fret locations
     for a given number of frets.
 
-    $scale_length is the numeric scale length
-    $fret_num is the fret number being calculated (fret() only)
-    $num_frets is the number of frets to be calculated (fretcalc() only)
-    $input_scale is the scale to be used for the input (Scale length):
-    'in' (inches) or 'mm' (millimeters)
-    $output_scale if the scale to be used when dipslaying the calculations:
-    'in' (inches) or 'mm' (millimeters)
+    fret()
+    ------
+    $scale_length - Numeric scale length (int of float)
+
+    $fret_num - Fret number being calculated (int)
+
+    $input_scale - Scale to be used for the input (Scale length):
+    'in' (inches) or 'mm' (millimeters) (int or float)
+
+    $output_scale - Scale to be used when dipslaying the calculations:
+    'in' (inches) or 'mm' (millimeters) (int of float)
+
+    $calc_method - Calculation method (optional):
+    't': tempered (default)
+    'ec': classic - 17.817
+    'es': Sloane - 17.835
+    'ep': Primative - 18
+
+    $tet - Tones per Octave (optional, $calc_method='t' only: default=12) (int)
+
+    fretcalc()
+    ---------- 
+
+    $scale_length - Numeric scale length (int of float)
+
+    $num_frets - Number of frets to be calculated (int)
+
+    $input_scale - Scale to be used for the input (Scale length):
+    'in' (inches) or 'mm' (millimeters) (int or float)
+
+    $output_scale - Scale to be used when dipslaying the calculations:
+    'in' (inches) or 'mm' (millimeters) (int of float)
+
+    $calc_method - Calculation method (optional):
+    't': tempered (default)
+    'ec': classic - 17.817
+    'es': Sloane - 17.835
+    'ep': Primative - 18
+
+    $tet - Tones per Octave (optional, $calc_method='t' only: default=12) (int)
+
 
     Please let me know of any bugs you find or if you have any other
     routines you would like to contribute.
