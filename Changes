@@ -1,0 +1,8 @@
+Revision history for Perl extension Lutherie::FretCalc.
+
+0.01  Sun Mar 11 10:37:20 2001
+	- original version; created by h2xs 1.20 with options
+		-AXn Lutherie::FretCalc
+
+0.14  Sun March 11 2001
+        - Created example scripts, fretcalc.pl and fretcalc.cgi

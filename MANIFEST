@@ -1,0 +1,9 @@
+README
+Changes
+FretCalc.pm
+MANIFEST
+TODO
+Makefile.PL
+test.pl
+examples/fretcalc.pl
+examples/fretcalc.cgi

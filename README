@@ -1,0 +1,66 @@
+README for Lutherie::FretCalc
+
+Lutherie::FretCalc provides two routines for calculating 
+fret spacing locations for stringed musical instruments.
+fret() will find the distance for the nut for a given
+fret number. fretcalc() will generate an array containing
+the fret locations for a given number of frets.
+
+$scale_length is the numeric scale length
+$fret_num is the fret number being calculated (C<fret> only)
+$num_frets is the number of frets to be calculated (C<fretcalc> only)
+$input_scale is the scale to be used for the input (Scale length):
+'in' (inches) or 'mm' (millimeters)
+$output_scale if the scale to be used when dipslaying the calculations:
+'in' (inches) or 'mm' (millimeters)
+
+Please let me know of any bugs you find or if you have any other
+routines you would like to contribute.
+
+Requirements:
+-------------
+Perl version 5.000 or higher. Developed using version 5.6 on Linux.
+
+Where can I get it from?
+------------------------ 
+  http://www.dougsparling.com/
+
+Installation:
+-------------
+ % perl Makefile.PL
+ % make
+ % make test
+ % make install
+
+Documentation:
+--------------
+Documentation is included in the module as POD. A man file should be
+created in the installation process.
+
+Changes:
+--------
+See the Changes file
+
+Author:
+-------
+Doug Sparling	doug@dougsparling.com
+
+Disclaimer:
+-----------
+This program is distributed inthe hope that it will be
+useful, but without any warranty; without even the implied
+warranty of merchantability or fitness for a particular
+purpose.
+
+Support:
+--------
+Questions, but reports, useful code bits, and suggestions for
+Lutherie::FretCalc should be sent to me at doug@dougsparling.com
+
+Copyright:
+----------
+Copyright (c) 2001 Douglas Sparling. All rights reserved.
+This program is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.
+
+
